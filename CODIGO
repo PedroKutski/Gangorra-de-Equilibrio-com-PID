@@ -1,0 +1,145 @@
+#include <Wire.h>
+#include <ESP32Servo.h>
+#include <WiFi.h>
+#include <ESPAsyncWebServer.h>
+#include <AsyncTCP.h>
+#include <ESPmDNS.h> // Biblioteca para mDNS
+
+const char* ssid = "Pedro K";
+const char* password = "jps510123";
+const char* hostname = "esp32"; // Nome de host mDNS
+
+const int triggerPin = 23;
+const int echoPin = 22;
+Servo myservo;
+
+float distance = 0.0;
+float elapsedTime, currentTime, timePrev;
+float distance_previous_error = 0.0, distance_error = 0.0;
+int period = 200;
+
+float kp = 0;
+float ki = 0;
+float kd = 0;
+float distance_setpoint = 22;
+float PID_p, PID_i, PID_d, PID_total;
+
+AsyncWebServer server(80);
+
+void setup() {
+  Serial.begin(115200);
+  WiFi.begin(ssid, password);
+
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(1000);
+    Serial.println("Conectando ao WiFi...");
+  }
+
+  Serial.println("Conectado ao WiFi");
+
+  if (!MDNS.begin(hostname)) {
+    Serial.println("Erro ao inicializar o mDNS");
+    return;
+  }
+  Serial.println("mDNS inicializado");
+  Serial.print("Acesse http://");
+  Serial.print(hostname);
+  Serial.println(".local");
+
+  myservo.attach(18);
+  myservo.write(125);
+  pinMode(triggerPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+
+  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(200, "text/html", "<!DOCTYPE html><html><body><h1>Controle do Servo</h1><p id='distance'>Distância: --- cm</p><input type='range' min='0' max='30' value='50' id='servoControl'><p id='setpoint'>Setpoint: 50</p><p>Kp: <input type='number' id='kp' value='8'></p><p>Ki: <input type='number' id='ki' value='0'></p><p>Kd: <input type='number' id='kd' value='0'></p><button onclick='setPID()'>Setar PID</button><div id='progressContainer' style='width: 100%; background-color: #ddd;'><div id='progressBar' style='width: 0%; height: 30px; background-color: #4CAF50;'></div></div><script>function setPID() { var kp = document.getElementById('kp').value; var ki = document.getElementById('ki').value; var kd = document.getElementById('kd').value; fetch('/setPID?kp=' + kp + '&ki=' + ki + '&kd=' + kd); } document.getElementById('servoControl').oninput = function() { fetch('/setpoint?value=' + this.value); document.getElementById('setpoint').innerHTML = 'Setpoint: ' + this.value; }; setInterval(function() { fetch('/distance').then(function(response) { return response.text(); }).then(function(data) { document.getElementById('distance').innerHTML = 'Distância: ' + data + ' cm'; document.getElementById('progressBar').style.width = (data / 100) * 100 + '%'; }); }, 500);</script></body></html>");
+  });
+
+  server.on("/setpoint", HTTP_GET, [](AsyncWebServerRequest *request){
+    if (request->hasParam("value")) {
+      String value = request->getParam("value")->value();
+      distance_setpoint = value.toFloat();
+      Serial.print("Novo setpoint: ");
+      Serial.println(distance_setpoint);
+    }
+    request->send(200, "text/plain", "OK");
+  });
+
+  server.on("/setPID", HTTP_GET, [](AsyncWebServerRequest *request){
+    if (request->hasParam("kp") && request->hasParam("ki") && request->hasParam("kd")) {
+      kp = request->getParam("kp")->value().toFloat();
+      ki = request->getParam("ki")->value().toFloat();
+      kd = request->getParam("kd")->value().toFloat();
+      Serial.print("Novo kp: ");
+      Serial.print(kp);
+      Serial.print(", Novo ki: ");
+      Serial.print(ki);
+      Serial.print(", Novo kd: ");
+      Serial.println(kd);
+    }
+    request->send(200, "text/plain", "OK");
+  });
+
+  server.on("/distance", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(200, "text/plain", String(distance).c_str());
+  });
+
+  server.begin();
+}
+
+void loop() {
+  if (millis() - currentTime >= period) {
+    currentTime = millis();
+    distance = get_dist();
+
+    if (distance >= 0) { // Consider only valid distances
+      distance_error = distance_setpoint - distance;
+
+      PID_p = kp * distance_error;
+      float dist_difference = distance_error - distance_previous_error;
+      PID_d = kd * (dist_difference / period);
+
+      if (abs(distance_error) < 0.5) {
+        PID_i += ki * distance_error;
+      } else {
+        PID_i = 0;
+      }
+
+      PID_total = PID_p + PID_i + PID_d;
+      PID_total = constrain(map(PID_total, -150, 150, 0, 150), 20, 95);
+
+      myservo.write(PID_total + 30);
+
+      distance_previous_error = distance_error;
+
+     // Serial.print("Distância: ");
+      Serial.print(distance);
+      Serial.print(" ");
+     // Serial.print(" cm, PID_p: ");
+      //Serial.print(PID_p);
+     // Serial.print(", PID_i: ");
+      //Serial.print(PID_i);
+     // Serial.print(", PID_d: ");
+     // Serial.print(PID_d);
+     // Serial.print(", Servo: ");
+      Serial.println(PID_total + 30);
+    }
+  }
+}
+
+float get_dist() {
+  digitalWrite(triggerPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(triggerPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(triggerPin, LOW);
+
+  long duration = pulseIn(echoPin, HIGH);
+  float distance_cm = duration * 0.034 / 2;
+
+  if (distance_cm > 30) {
+    distance_cm = 0; // Invalid distance
+  }
+
+  return distance_cm;
+}
