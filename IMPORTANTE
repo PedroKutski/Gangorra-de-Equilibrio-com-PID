@@ -1,0 +1,11 @@
+MATERIAIS:
+Servo motor 180 graus(Atuador) - para ajuste da gangorra
+Sensor ultrassonico HCSR04 - Sensor para distância
+Esp32 (Controlador) - Cerebro receptor - função de calculo e transmissão web server
+Folha A4 MDF 3mm
+Jumpers para conexões
+Protoboard
+Conversor de nìvel lógico - utilizado na conversão HCSR04
+
+Nota: O ESP32 possui tensão de operação de 3.3V, impossibilitando ligação direta com o sensor ultrassonico que possui tensão de 5V, 
+nota-se que o servo motor pode ser conectado ja que possui circuito integrado interno.
