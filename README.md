@@ -11,5 +11,6 @@ Resultado
 Principal objetivo era estabilizar uma bolinha de ping-pong no set, havendo equilibrio.Notou-se que com a bolinha de ping-pong havia muito recuo do som, devido a sua estrutura propria projetando, falsos sinais, resolvido trocando por um objeto cilindrico de de 2cm de raio, trazendo bom resultado, mas desvis horizontais.
 
 POSSIVEIS MELHORIAS PARA O PROBLEMA DE AJUSTE SENSOR ULTRASSONICO-->BOLINHA:
+
 Uso de sensor laser para captação da distancia, trazendo maior ganho em questão de precisâo.
 Em caso de baixo custo, optar por melhorar estrutura principal de equilibrio dxf. para estrutura U, assim o som pode captar melhor o deslocamento da bolinha.
