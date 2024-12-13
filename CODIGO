@@ -5,8 +5,8 @@
 #include <AsyncTCP.h>
 #include <ESPmDNS.h> // Biblioteca para mDNS
 
-const char* ssid = "Pedro K";
-const char* password = "jps510123";
+const char* ssid = "ADICIONEAQUISEUSSIDWIFI";
+const char* password = "AQUISUASENHA";
 const char* hostname = "esp32"; // Nome de host mDNS
 
 const int triggerPin = 23;
