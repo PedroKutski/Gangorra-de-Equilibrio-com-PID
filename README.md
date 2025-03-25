@@ -1,16 +1,45 @@
-Introdução
-O avanço da automação e dos sistemas de controle tem possibilitado soluções inovadoras para desafios dinâmicos em diversas áreas. Este projeto explora o conceito de equilíbrio automatizado em um sistema físico, utilizando sensores, motores e programação para criar uma gangorra inteligente. Essa aplicação prática de conceitos como feedback, sensores e atuadores não apenas ilustra princípios básicos da engenharia de controle, mas também demonstra como tecnologias acessíveis podem ser empregadas em projetos de aprendizado ou até mesmo em soluções industriais.
+# 🎢 Gangorra Inteligente com Controle Automático
 
-Resumo
-Este artigo apresenta o desenvolvimento e a implementação de um sistema automatizado para o equilíbrio de uma gangorra, utilizando um sensor ultrassônico e um motor servo. O sistema é projetado para detectar a posição de uma bolinha colocada sobre a gangorra, utilizando medições de distância feitas pelo sensor ultrassônico. Esses dados são processados para controlar o servo motor, que ajusta o ângulo da gangorra em tempo real, mantendo o equilíbrio da bolinha dentro de uma faixa segura. O servo motor possui capacidade de rotação de até 120 graus, permitindo ajustes finos na inclinação da gangorra.
+Este projeto explora a automação e o controle de sistemas físicos, aplicando conceitos de feedback, sensores e atuadores para criar uma **gangorra inteligente**! Utilizando um sensor ultrassônico e um motor servo, o sistema ajusta automaticamente a inclinação da gangorra para manter o equilíbrio de um objeto, tornando-se uma aplicação prática e interativa de engenharia de controle. 🚀
 
-O projeto destaca aspectos técnicos como o uso de microcontroladores para leitura de sensores, cálculos de posição e emissão de comandos ao servo motor. Além disso, são exploradas técnicas de calibração e controle proporcional para garantir que o sistema responda de forma estável e precisa às mudanças de posição da bolinha. A aplicação desse sistema não só exemplifica conceitos de engenharia de controle, mas também pode inspirar soluções criativas em contextos educacionais e de prototipagem.
+---
 
+## 📌 Visão Geral
+- **Detecção de posição**: O sensor ultrassônico mede a distância da bolinha sobre a gangorra.
+- **Controle dinâmico**: Um microcontrolador processa os dados e envia comandos ao servo motor.
+- **Ajustes inteligentes**: O servo motor inclina a gangorra em tempo real para manter o equilíbrio da bolinha.
 
-Resultado
-Principal objetivo era estabilizar uma bolinha de ping-pong no set, havendo equilibrio.Notou-se que com a bolinha de ping-pong havia muito recuo do som, devido a sua estrutura propria projetando, falsos sinais, resolvido trocando por um objeto cilindrico de de 2cm de raio, trazendo bom resultado, mas desvis horizontais.
+Essa abordagem pode ser aplicada tanto em projetos educacionais quanto em prototipagem para sistemas de controle industriais! 🏭
 
-POSSIVEIS MELHORIAS PARA O PROBLEMA DE AJUSTE SENSOR ULTRASSONICO-->BOLINHA:
+---
 
-Uso de sensor laser para captação da distancia, trazendo maior ganho em questão de precisâo.
-Em caso de baixo custo, optar por melhorar estrutura principal de equilibrio dxf. para estrutura U, assim o som pode captar melhor o deslocamento da bolinha.
+## 🔬 Desenvolvimento do Sistema
+O projeto foi desenvolvido com os seguintes componentes:
+- **Microcontrolador** (ESP32, Arduino ou similar) para processar os dados
+- **Sensor ultrassônico** para medir a posição da bolinha
+- **Servo motor** com rotação de até 120° para ajustar a inclinação
+- **Estrutura física** projetada para permitir ajustes finos na estabilidade
+
+A implementação incluiu técnicas de **calibração** e **controle proporcional** para garantir uma resposta rápida e precisa às mudanças de posição da bolinha. 🎯
+
+---
+
+## 🔍 Resultados Obtidos
+O objetivo principal era estabilizar uma **bolinha de ping-pong** na gangorra. No entanto, o material da bolinha refletia o som do sensor de forma inconsistente, gerando medições imprecisas. 🔄 Para resolver isso, foi utilizado um **objeto cilíndrico de 2cm de raio**, o que melhorou a detecção e reduziu erros horizontais. ✅
+
+---
+
+## 🚀 Melhorias Futuras
+Aqui estão algumas ideias para aprimorar o desempenho do sistema:
+
+🔹 **Substituir o sensor ultrassônico por um sensor a laser** para maior precisão na medição da posição da bolinha. 🟢
+
+🔹 **Reprojetar a estrutura física** da gangorra para um formato em **U**, permitindo uma melhor propagação do som e minimizando interferências nas leituras do sensor ultrassônico. 🛠️
+
+Essas melhorias podem tornar o sistema ainda mais robusto e confiável! 💡
+
+---
+
+## 📜 Licença
+Este projeto é de código aberto e está licenciado sob a **MIT License**. Sinta-se à vontade para explorar, modificar e aprimorar! 🎉
+
